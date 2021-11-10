@@ -111,8 +111,8 @@ def get_scenario(name):
         sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/paintcontrol.csv')
     elif name == 'iofrol':
         sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/iofrol.csv')
-    elif name == 'gsdtsr':
-        sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/gsdtsr.csv')
+    # elif name == 'gsdtsr':
+    #     sc = scenarios.IndustrialDatasetScenarioProvider(tcfile='DATA/gsdtsr.csv')
 
     return sc
 
@@ -127,7 +127,8 @@ def run_experiments(exp_fun, parallel=PARALLEL):
     print(('Ran experiments: %d results' % len(avg_res)))
 
 
-def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol', 'gsdtsr']):
+# def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol', 'gsdtsr']):
+def exp_run_industrial_datasets(iteration, datasets=['paintcontrol', 'iofrol']):
     ags = [
         lambda: (
             agents.TableauAgent(histlen=retecs.DEFAULT_HISTORY_LENGTH, learning_rate=retecs.DEFAULT_LEARNING_RATE,
