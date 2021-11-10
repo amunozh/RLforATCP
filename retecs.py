@@ -30,7 +30,7 @@ except:
 # write_file = open(" res.txt","a")
 # comparison_file = open("compare.txt","w")
 
-start_time = time.clock()
+start_time = time.time()
 
 DEFAULT_NO_SCENARIOS = 1000
 ## No of Actions are defined for Tableau Representation for formation of table (Table formed is action_size * no_of_states)
@@ -59,6 +59,11 @@ DEFAULT_PLOT_GRAPHS = True
 DEFAULT_NO_HIDDEN_NODES = 32
 DEFAULT_TODAY = datetime.datetime.today()
 
+
+#General statistics
+total_failures_present=0
+total_failures_detected=0
+total_failures_missed=0
 
 log_file = open("retecs_log.txt","w")
 
@@ -274,11 +279,13 @@ class PrioLearning(object):
 		for sc in batch:
 			(result, reward) = self.process_scenario(sc)
 			print('Replay Experience: %s / %.2f' % (result, np.mean(reward)))
-			# log_file.write('Replay Experience: %s / %.2f' % (result, np.mean(reward)) )
-			# log_file.write('\n')
+			log_file.write('Replay Experience: %s / %.2f' % (result, np.mean(reward)) )
+			log_file.write('\n')
 
 	def train(self, no_scenarios, print_log, plot_graphs, save_graphs, collect_comparison=True):
 		# Stats is the Dictionary of this object which has various useful fields mentioned below
+		global total_failures_detected
+		global total_failures_missed
 		stats = {
 			'scenarios': [],
 			'rewards': [],
@@ -374,8 +381,7 @@ class PrioLearning(object):
 				print(' finished, reward: %.2f,\trunning mean: %.4f,\tduration: %.1f,\tresult: %s' %
 					  (np.mean(reward), sum_reward / sum_scenarios, duration, result))
 				
-			global total_failures_detected
-			global total_failures_missed
+			
 			total_failures_detected += result[0]
 			total_failures_missed +=result[1]
 			
@@ -563,9 +569,6 @@ if __name__ == '__main__':
 															 args.learning_rate, args.actions, args.no_scenarios,
 															 args.epsilon, args.histlen, args.prefix)
 
-	total_failures_present=0
-	total_failures_detected=0
-	total_failures_missed=0
 
 	rl_learning = PrioLearning(agent=agent,
 							   scenario_provider=scenario_provider,
@@ -592,5 +595,5 @@ if __name__ == '__main__':
 	print(total_failures_missed)
 	print("Recall is ",(100.0*total_failures_detected)/total_failures_present)
 	print(avg_napfd)
-	end_time=time.clock()
+	end_time=time.time()
 	print("The total time taken is ", end_time - start_time)
